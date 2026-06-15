@@ -1,0 +1,160 @@
+-- Khởi tạo ScreenGui
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "ChuoiHub_GUI"
+ScreenGui.ResetOnSpawn = false
+ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+-- Tự động xóa GUI cũ nếu có trùng tên để tránh rác màn hình
+local oldGui = game:GetService("CoreGui"):FindFirstChild(ScreenGui.Name) or game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui"):FindFirstChild(ScreenGui.Name)
+if oldGui then oldGui:Destroy() end
+
+-- Ưu tiên bỏ vào CoreGui nếu chạy bằng script executor, ngược lại bỏ vào PlayerGui
+local success, err = pcall(function()
+    ScreenGui.Parent = game:GetService("CoreGui")
+end)
+if not success then
+    ScreenGui.Parent = game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui")
+end
+
+-- Khung chính (Main Frame)
+local MainFrame = Instance.new("Frame")
+MainFrame.Name = "MainFrame"
+MainFrame.Size = UDim2.new(0, 480, 0, 310)
+MainFrame.Position = UDim2.new(0.5, -240, 0.5, -155) -- Căn giữa màn hình
+MainFrame.BackgroundColor3 = Color3.fromRGB(24, 28, 30) -- Màu nền tối hơi xanh
+MainFrame.BackgroundTransparency = 0.1 -- Hơi trong suốt nhẹ như ảnh
+MainFrame.BorderSizePixel = 0
+MainFrame.Active = true
+MainFrame.Draggable = true -- Cho phép kéo thả giao diện trên màn hình
+MainFrame.Parent = ScreenGui
+
+-- Bo góc cho Khung chính
+local MainCorner = Instance.new("UICorner")
+MainCorner.CornerRadius = UDim.new(0, 16)
+MainCorner.Parent = MainFrame
+
+-- Viền xanh cho Khung chính
+local MainStroke = Instance.new("UIStroke")
+MainStroke.Thickness = 1.5
+MainStroke.Color = Color3.fromRGB(56, 151, 107) -- Màu xanh lá pastel
+MainStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+MainStroke.Parent = MainFrame
+
+-- Thanh Tiêu đề (Header)
+local Header = Instance.new("Frame")
+Header.Name = "Header"
+Header.Size = UDim2.new(1, 0, 0, 40)
+Header.BackgroundTransparency = 1 -- Ẩn nền của Header để dùng chung nền MainFrame
+Header.Parent = MainFrame
+
+-- Chữ Tiêu đề (Title)
+local Title = Instance.new("TextLabel")
+Title.Name = "Title"
+Title.Size = UDim2.new(1, -40, 1, 0)
+Title.Position = UDim2.new(0, 15, 0, 0)
+Title.BackgroundTransparency = 1
+Title.Text = "One click GAG2 / discord.gg/chuoihub"
+Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+Title.TextSize = 16
+Title.Font = Enum.Font.RobotoMono
+Title.TextXAlignment = Enum.TextXAlignment.Left
+Title.Parent = Header
+
+-- Nút Thu nhỏ / Ẩn (_)
+local MinimizeBtn = Instance.new("TextButton")
+MinimizeBtn.Name = "MinimizeBtn"
+MinimizeBtn.Size = UDim2.new(0, 30, 0, 30)
+MinimizeBtn.Position = UDim2.new(1, -35, 0, 5)
+MinimizeBtn.BackgroundTransparency = 1
+MinimizeBtn.Text = "_"
+MinimizeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+MinimizeBtn.TextSize = 18
+MinimizeBtn.Font = Enum.Font.RobotoMono
+MinimizeBtn.Parent = Header
+
+-- Vùng chứa Nội dung (Content Container)
+local ContentContainer = Instance.new("Frame")
+ContentContainer.Name = "ContentContainer"
+ContentContainer.Size = UDim2.new(1, -30, 1, -55)
+ContentContainer.Position = UDim2.new(0, 15, 0, 45)
+ContentContainer.BackgroundTransparency = 1
+ContentContainer.Parent = MainFrame
+
+-- Sử dụng UIListLayout để tự động xếp các dòng từ trên xuống dưới
+local UIListLayout = Instance.new("UIListLayout")
+UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+UIListLayout.Padding = UDim.new(0, 6) -- Khoảng cách giữa các dòng
+UIListLayout.Parent = ContentContainer
+
+-- Hàm tạo tiêu đề mục (Ví dụ: [ Player ], [ Status ])
+local function createSectionTitle(text, order)
+    local label = Instance.new("TextLabel")
+    label.Size = UDim2.new(1, 0, 0, 25)
+    label.BackgroundTransparency = 1
+    label.Text = text
+    label.TextColor3 = Color3.fromRGB(80, 180, 130) -- Màu xanh lá sáng của text mục
+    label.TextSize = 16
+    label.Font = Enum.Font.RobotoMono
+    label.TextXAlignment = Enum.TextXAlignment.Left
+    label.LayoutOrder = order
+    label.Parent = ContentContainer
+    return label
+end
+
+-- Hàm tạo dòng thông số (Ví dụ: Sheckles: $847.55K)
+local function createStatLabel(text, order)
+    local label = Instance.new("TextLabel")
+    label.Size = UDim2.new(1, 0, 0, 22)
+    label.BackgroundTransparency = 1
+    label.Text = text
+    label.TextColor3 = Color3.fromRGB(210, 215, 220) -- Màu chữ trắng xám nhẹ giống ảnh
+    label.TextSize = 16
+    label.Font = Enum.Font.RobotoMono
+    label.TextXAlignment = Enum.TextXAlignment.Left
+    label.LayoutOrder = order
+    label.Parent = ContentContainer
+    return label
+end
+
+--- --- TẠO CÁC DÒNG GIAO DIỆN (Theo ảnh image_844b04.png) --- ---
+
+createSectionTitle("[ Player ]", 1)
+local Stat_Sheckles    = createStatLabel("Sheckles: $847.55K", 2)
+local Stat_Fruit       = createStatLabel("Fruit: 44 / 100", 3)
+local Stat_Pets        = createStatLabel("Pets Equipped: 4 / 4", 4)
+local Stat_Plot        = createStatLabel("Plot: 3", 5)
+
+-- Dòng trống nhẹ để phân cách (padding tự động từ UIListLayout đã đủ rộng, nhưng thêm dòng trống nếu cần)
+createSectionTitle("[ Status ]", 6)
+local Stat_Uptime      = createStatLabel("Uptime: 00:01:30", 7)
+local Stat_LastHarvest = createStatLabel("Last: Harvested 14 (0.1s)", 8)
+
+
+--- --- LOGIC TỰ ĐỘNG CẬP NHẬT (Ví dụ thực tế) --- ---
+
+-- 1. Code đếm thời gian Uptime thực tế
+local startTime = os.time()
+task.spawn(function()
+    while task.wait(1) do
+        if not ScreenGui or not ScreenGui.Parent then break end
+        local elapsed = os.time() - startTime
+        local hours = math.floor(elapsed / 3600)
+        local minutes = math.floor((elapsed % 3600) / 60)
+        local seconds = elapsed % 60
+        Stat_Uptime.Text = string.format("Uptime: %02d:%02d:%02d", hours, minutes, seconds)
+    end
+end)
+
+-- 2. Logic ẩn/hiện khi bấm nút gạch dưới (_)
+local isMinimized = false
+MinimizeBtn.MouseButton1Click:Connect(function()
+    isMinimized = not isMinimized
+    ContentContainer.Visible = not isMinimized
+    if isMinimized then
+        MainFrame.Size = UDim2.new(0, 480, 0, 40) -- Thu nhỏ chỉ để lại thanh header
+        MainStroke.Thickness = 1 -- Thu nhỏ viền lại chút cho đẹp
+    else
+        MainFrame.Size = UDim2.new(0, 480, 0, 310) -- Mở rộng lại bình thường
+        MainStroke.Thickness = 1.5
+    end
+end)
