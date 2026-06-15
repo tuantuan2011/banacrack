@@ -1,0 +1,3 @@
+loadstring(game:HttpGet("https://raw.githubusercontent.com/tuantuan2011/banacrack/refs/heads/main/VietNamOnTop", true))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/tuantuan2011/banacrack/refs/heads/main/Ui", true))()
+    
